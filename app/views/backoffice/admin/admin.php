@@ -41,7 +41,7 @@
 						<div class = "modal-body">
 							<center><label class = "text-danger">Are you sure you want to delete this record?</label></center>
 							<br />
-							<center><a class = "btn btn-danger remove_id" ><span class = "glyphicon glyphicon-trash"></span> Yes</a> <button type = "button" class = "btn btn-warning" data-dismiss = "modal" aria-label = "No"><span class = "glyphicon glyphicon-remove"></span> No</button></center>
+							<center><a class = "btn btn-danger delete_admin" ><span class = "glyphicon glyphicon-trash"></span> Yes</a> <button type = "button" class = "btn btn-warning" data-dismiss = "modal" aria-label = "No"><span class = "glyphicon glyphicon-remove"></span> No</button></center>
 						</div>
 					</div>
 				</div>
@@ -57,8 +57,9 @@
 					</div>
 				</div>
 			</div>
+			<div class="the-admin-message"></div>
 			<div class = "well col-lg-12">
-				<button type = "button" class = "btn btn-success" data-target = "#myModal" data-toggle = "modal"><span class = "glyphicon glyphicon-plus"></span> Add new</button>
+				<button type = "button" class = "btn btn-success" id="hide_admin_account"><span class = "glyphicon glyphicon-plus"></span> Add new</button>
 				<br />
 				<br />
 				<table id = "table_record_admin" class = "table table-bordered table_record_admin">
@@ -94,11 +95,11 @@
 	$(document).ready(function(){
 		$('.radmin_id').click(function(){
 			var id = $(this).attr('name');
-				$('.remove_id').click(function(){
+				$('.delete_admin').click(function(){
 					$.ajax({
 					type:'POST',
 					dataType:'TEXT',
-					url: 'Admin_c/delete_record/'+id,
+					url: 'Admin_c/delete_admin/'+id,
 					data:{id:id},
 					success: function(result){
 
@@ -124,5 +125,12 @@
 			var id = $(this).attr('name');
 			$('#edit_query').load('load_edit.php?admin_id=' + $admin_id);
 		});
+
+		$('#hide_admin_account').on('click', function(){ 
+			$('.admin').show();
+			$('.show_new_admin').show();
+			$('.nav-pills a[href="#new_admin"]').tab('show');
+		});
+
 	});
 </script>

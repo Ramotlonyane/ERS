@@ -1,4 +1,4 @@
-			<div class = "modal fade" id = "add_student" tabindex = "-1" role = "dialog" aria-labelledby = "myModallabel">
+			<div class = "modal fade" id = "add_employee" tabindex = "-1" role = "dialog" aria-labelledby = "myModallabel">
 				<div class = "modal-dialog" role = "document">
 					<div class = "modal-content panel-primary">
 						<div class = "modal-header panel-heading">
@@ -61,25 +61,80 @@
 					</div>
 				</div>
 			</div>
+			<div class="the-employee-message"></div>
 			<div class = "well col-lg-12">
-				<button class = "btn btn-success" type = "button" href = "#" data-toggle = "modal" data-target = "#add_student"><span class = "glyphicon glyphicon-plus"></span> Add new </button>
+				<button class = "btn btn-success" type = "button" href = "#" id="hide_employee_account"><span class = "glyphicon glyphicon-plus"></span> Add new </button>
 				<br />
 				<br />
-				<table id = "table" class = "table table-bordered">
+				<table id = "table_employee" class = "table table-bordered">
 					<thead class = "alert-info">
 						<tr>
 							<th>Employee ID</th>
-							<th>Firstname</th>
-							<th>Middlename</th>
-							<th>Lastname</th>
-							<th>Course</th>
-							<th>Section</th>
+							<th>Persal Number</th>
+							<th>First Name</th>
+							<th>Last Name</th>
+							<th>Directorate</th>
+							<th>Component</th>
 							<th>Action</th>
 						</tr>
 					</thead>
-					<tbody></tbody>
+					<tbody>
+							<?php foreach ($employeedata as $row): ?>
+							<tr>
+								<td><?php echo $row->id; ?></td>
+								<td><?php echo $row->persal_number; ?></td>
+								<td><?php echo $row->firstname; ?></td>
+								<td><?php echo $row->lastname; ?></td>
+								<td><?php echo $row->directorate; ?></td>
+								<td><?php echo $row->component; ?></td>
+								<td><a class = "btn btn-danger remployee_id" name = "<?php echo $row->id?>" href = "#" data-toggle = "modal" data-target = "#delete_employee"><span class = "glyphicon glyphicon-remove"></span></a> <a class = "btn btn-warning  e_employee_id" name = "<?php echo $row->id?>" href = "#" data-toggle = "modal" data-target = "#edit_student"><span class = "glyphicon glyphicon-edit"></span></a></td>
+							</tr>
+						<?php endforeach; ?>
+					</tbody>
 				</table>
 			</div>
 			<br />
 			<br />	
 			<br />
+<script type = "text/javascript">
+		$(document).ready(function(){
+			$('#table_employee').DataTable();
+		});
+</script>
+<script type="text/javascript">
+	$('#hide_employee_account').on('click', function(){ 
+		$('.show_new_admin').hide();
+		$('.show_new_employee').show();
+		$('.nav-pills a[href="#new_employee"]').tab('show');
+	});
+
+	$(document).ready(function(){
+		$('.remployee_id').click(function(){
+			var id = $(this).attr('name');
+				$('.remove_id').click(function(){
+					$.ajax({
+					type:'POST',
+					dataType:'TEXT',
+					url: 'Employee_c/delete_employee/'+id,
+					data:{id:id},
+					success: function(result){
+
+						$('#delete_employee').remove();
+						$('.modal-backdrop').remove();
+						$(".employee_data").html(result);
+
+						$('.the-employee-message').append('<div class="alert alert-success">' +
+                        '<span class="glyphicon glyphicon-ok"></span>' +
+                        ' Employee Deleted Successfully!!!' +
+                        '</div>');
+
+                        setTimeout(function(){
+                           $('.alert-success').hide();
+                        }, 3000);
+
+					}
+				});
+			});
+		});
+	});
+</script>

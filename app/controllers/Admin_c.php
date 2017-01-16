@@ -36,10 +36,12 @@ class Admin_c extends CI_Controller {
 		$this->load->view('backoffice/header.php');
 		$this->load->view('backoffice/navbar.php',$data_navbar);
 
-		$data = array('home' 		=> 'backoffice/home',
-					  'admin'		=> 'backoffice/admin/admin',
-					  'employee'	=> 'backoffice/employee/employee',
-					  'record'		=> 'backoffice/record',
+		$data = array('home' 			=> 'backoffice/home',
+					  'admin'			=> 'backoffice/admin/admin',
+					  'employee'		=> 'backoffice/employee/employee',
+					  'record'			=> 'backoffice/record',
+					  'new_admin'		=> 'backoffice/admin/new_admin',
+					  'new_employee'	=> 'backoffice/employee/new_employee'
 					 );
 
 		$this->load->view('backoffice/dashboard.php', $data);
@@ -81,6 +83,62 @@ class Admin_c extends CI_Controller {
 
 			$this->session->set_userdata($session_data);
 		}
+	}
+
+	public function add_admin(){
+
+		if ($this->session->userdata('logged_in') == TRUE) {
+
+		$data = array();
+
+		$username = $_POST['username'];
+		$password = $_POST['password'];
+		$firstname = $_POST['firstname'];
+		$lastname = $_POST['lastname'];
+
+		$q_checkadmin = $this->Admin_m->admin_check($username);
+
+			if ($q_checkadmin) {
+				$data['check'] = true;
+			}else{
+				$data = array(
+						'username'			=> $username,
+						'password'			=> $password,
+						'firstname'			=> $firstname,
+						'lastname'			=> $lastname,
+						'bDeleted'			=> 0,	
+						);
+
+				$a_result = $this->Admin_m->add_new_admin($data);
+				if ($a_result) {
+					$data['success'] = true;
+				}else{
+					$data['success'] = false;
+				}
+
+			}
+			echo json_encode($data);
+		}else{
+			$this->load->view('backoffice/back_index.php');
+		}
+	}
+
+	public function delete_admin($record_id){
+
+		if($this->session->userdata('logged_in') == TRUE)
+		{
+			$a_result = $this->Admin_m->remove_admin($record_id);
+
+				if ($a_result) {
+
+					$admin_data['admindata'] 	= $this->Admin_m->get_admindata();
+					$this->load->view("backoffice/admin/admin.php", $admin_data);
+				}
+
+		}else{
+			$this->load->view('backoffice/back_index.php');
+		}
+		
 	}
 
 	public function logout()

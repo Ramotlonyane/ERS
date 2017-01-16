@@ -28,3 +28,13 @@ function employee_data(){
 		}
 	});
 }
+function add_new_admin(){
+
+}
+function add_new_employee(){
+
+}
+
+$(document).ready(function() {
+
+});
